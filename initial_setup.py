@@ -21,11 +21,11 @@ class InitialSetupDialog(QDialog):
         request_url = "https://id.twitch.tv/oauth2/authorize?response_type=token+id_token&client_id={}&scope=openid%20chat:read%20chat:edit&redirect_uri=http://localhost".format(CLIENT_ID)
 
         self.webview.setUrl(QUrl(request_url))
-        
+
         self.token = None
 
     def redirected(self, qurl):
-        if qurl.url()[:32] == "https://localhost/#access_token=":
+        if (qurl.url()[:32] == "https://localhost/#access_token=") or (qurl.url()[:31] == "http://localhost/#access_token="):
             self.token = qurl.url()[32:qurl.url().index('&')]
             self.accept()
 
