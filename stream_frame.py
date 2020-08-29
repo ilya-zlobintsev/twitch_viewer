@@ -69,4 +69,3 @@ class StreamFrame(QWidget):
     def open_raw_link(self, link):
         self.media_player.setMedia(QMediaContent(QUrl(link)))
         self.media_player.play()
-

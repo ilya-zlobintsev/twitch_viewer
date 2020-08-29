@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import QDialog, QSizePolicy
 from PyQt5.QtWebKitWidgets import QWebView
 from PyQt5.QtCore import QUrl
 
+from twitch_api import TwitchApi
+
+
 CLIENT_ID = "fkdschoxmb5ls6pb767kn1cgx4mvyu"
 
 class InitialSetupDialog(QDialog):
@@ -29,8 +32,12 @@ class InitialSetupDialog(QDialog):
             self.token = qurl.url()[32:qurl.url().index('&')]
             self.accept()
 
+            api = TwitchApi(CLIENT_ID, self.token)
+            self.username = api.get_users_by_login()["data"][0]["display_name"]
+
     def exec_(self):
         super(InitialSetupDialog, self).exec_()
         if self.token is not None:
             return {"client_id": CLIENT_ID,
-                    "oauth_token": self.token}
+                    "oauth_token": self.token,
+                    "username": self.username}

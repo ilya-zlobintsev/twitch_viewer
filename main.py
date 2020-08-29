@@ -8,6 +8,7 @@ from pathlib import Path
 
 from following_treeview import FollowingTreeView
 from stream_frame import StreamFrame
+from chat_frame import ChatFrame
 
 from twitch_api import TwitchApi
 
@@ -32,15 +33,19 @@ class MainWindow(QMainWindow):
         self.following_tree_view.selectionModel().selectionChanged.connect(self.activate_stream)
 
         self.stream_frame = StreamFrame()
+        self.chat_frame = ChatFrame()
 
         main_layout.addWidget(self.following_tree_view, stretch=1)
-        main_layout.addWidget(self.stream_frame, stretch=3)
+        main_layout.addWidget(self.stream_frame, stretch=4)
+        main_layout.addWidget(self.chat_frame, stretch=2)
 
         root_widget.setLayout(main_layout)
 
     def activate_stream(self):
-        selected = self.following_tree_view.selectedIndexes()[0].data()
+        selected = self.following_tree_view.selectedIndexes()[0].data().replace(' ', '')
         self.stream_frame.open_stream(selected)
+
+        self.chat_frame.connect(self.config["oauth_token"], self.config["username"], selected)
 
     CONFIG_PATH = str(Path.home()) + "/.config/twitch_viewer/settings.json"
 
